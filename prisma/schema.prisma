@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -36,6 +37,8 @@ model Notification {
   title   String
   message String
   read    Boolean @default(false)
+
+  @@index([user_id])
 }
 
 model Permission {
@@ -62,8 +65,10 @@ model Album {
   permissions AlbumPermission[]
 
   parent_id String?
-  parent    Album?  @relation("AlbumToAlbum", references: [id], fields: [parent_id])
+  parent    Album?  @relation("AlbumToAlbum", references: [id], fields: [parent_id], onUpdate: NoAction, onDelete: NoAction)
   children  Album[] @relation("AlbumToAlbum")
+
+  @@index([user_id, parent_id])
 }
 
 model AlbumPermission {
@@ -82,6 +87,8 @@ model AlbumPermission {
   may_download Boolean @default(false)
   require_link Boolean @default(false)
   password     String?
+
+  @@index([album_id, user_id])
 }
 
 model Photo {
@@ -101,6 +108,8 @@ model Photo {
   size_variants SizeVariant[]
   mime          String
   exif          Json?
+
+  @@index([album_id, user_id])
 }
 
 model SizeVariant {
@@ -117,6 +126,8 @@ model SizeVariant {
   width      Int
   height     Int
   file_size  Int
+
+  @@index([photo_id])
 }
 
 enum SizeVariantType {
@@ -138,6 +149,8 @@ model Tag {
 
   name   String
   photos Photo[]
+
+  @@index([user_id])
 }
 
 model Session {
