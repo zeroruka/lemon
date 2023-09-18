@@ -3,9 +3,21 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			auth: import('lucia').AuthRequest;
+			user: Lucia.Auth.UserAttributes;
+		}
 		// interface PageData {}
 		// interface Platform {}
+	}
+
+	// eslint-disable-next-line no-var
+	var prisma: PrismaClient;
+
+	namespace Lucia {
+		type Auth = import('$lib/server/lucia').Auth;
+		type DatabaseUserAttributes = {};
+		type DatabaseSessionAttributes = {};
 	}
 }
 

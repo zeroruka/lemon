@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  username   String   @unique
+  email      String?  @unique
+
+  permission_id     String            @unique
+  permission        Permission        @relation(references: [id], fields: [permission_id])
+  albums            Album[]
+  notifications     Notification[]
+  album_permissions AlbumPermission[]
+  photos            Photo[]
+  tags              Tag[]
+
+  auth_session Session[]
+  key          Key[]
+}
+
+model Notification {
+  id         String   @id @unique @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user_id    String
+  user       User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  title   String
+  message String
+  read    Boolean @default(false)
+}
+
+model Permission {
+  id   String @id @default(uuid())
+  user User?
+
+  may_administrate      Boolean @default(false)
+  may_upload            Boolean @default(true)
+  may_edit_own_settings Boolean @default(true)
+}
+
+model Album {
+  id          String   @id @unique @default(uuid())
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user_id     String
+  user        User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  title       String
+  description String?
+  is_nsfw     Boolean  @default(false)
+  public      Boolean  @default(false)
+  photos      Photo[]
+
+  permissions AlbumPermission[]
+
+  parent_id String?
+  parent    Album?  @relation("AlbumToAlbum", references: [id], fields: [parent_id])
+  children  Album[] @relation("AlbumToAlbum")
+}
+
+model AlbumPermission {
+  id         String   @id @unique @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  album_id   String
+  album      Album    @relation(references: [id], fields: [album_id], onDelete: Cascade)
+  user_id    String
+  user       User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  may_view     Boolean @default(true)
+  may_edit     Boolean @default(false)
+  may_upload   Boolean @default(false)
+  may_delete   Boolean @default(false)
+  may_download Boolean @default(false)
+  require_link Boolean @default(false)
+  password     String?
+}
+
+model Photo {
+  id         String   @id @unique @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  album_id   String?
+  album      Album?   @relation(references: [id], fields: [album_id])
+  user_id    String
+  user       User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  title         String
+  description   String?
+  tags          Tag[]
+  is_public     Boolean       @default(false)
+  is_starred    Boolean       @default(false)
+  size_variants SizeVariant[]
+  mime          String
+  exif          Json?
+}
+
+model SizeVariant {
+  id         String   @id @unique @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  photo_id   String
+  photo      Photo    @relation(references: [id], fields: [photo_id], onDelete: Cascade)
+
+  type       SizeVariantType
+  short_path String
+  full_path  String
+  url        String
+  width      Int
+  height     Int
+  file_size  Int
+}
+
+enum SizeVariantType {
+  ORIGINAL
+  MEDIUM2X
+  MEDIUM
+  SMALL2X
+  SMALL
+  THUMB2X
+  THUMB
+}
+
+model Tag {
+  id         String   @id @unique @default(uuid())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user_id    String
+  user       User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  name   String
+  photos Photo[]
+}
+
+model Session {
+  id             String @id @unique
+  user_id        String
+  active_expires BigInt
+  idle_expires   BigInt
+  user           User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model Key {
+  id              String  @id @unique
+  hashed_password String?
+  user_id         String
+  user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+}
