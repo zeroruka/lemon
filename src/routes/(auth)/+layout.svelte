@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { LightSwitch } from '$lib/components/light-switch';
 	import { animate } from 'motion';
 
 	function animateCardBackdrop(node: HTMLElement) {
@@ -19,5 +20,6 @@
 </script>
 
 <div class=" flex justify-center items-center h-full" use:animateCardBackdrop>
+	<!-- <LightSwitch /> -->
 	<slot />
 </div>
