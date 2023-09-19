@@ -1,5 +1,5 @@
 import { auth } from '$lib/server/lucia';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { LuciaError } from 'lucia';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { loginFormSchema } from './login-form.svelte';
@@ -54,6 +54,6 @@ export const actions = {
 			});
 		}
 
-		return { form };
+		throw redirect(302, '/');
 	}
 };

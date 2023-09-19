@@ -11,7 +11,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 			where: { id: session.user.userId },
 			include: { permission: true }
 		});
-		console.log(event.locals.user);
 	}
 
 	if (event.url.pathname.startsWith('/api/signout')) {
@@ -20,6 +19,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 			event.locals.auth.setSession(null);
 		}
 		throw redirect(303, '/');
+	}
+
+	if (event.url.pathname.startsWith('/login') || event.url.pathname.startsWith('/signup')) {
+		if (session) {
+			throw redirect(303, '/');
+		}
 	}
 
 	return await resolve(event);

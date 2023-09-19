@@ -1,7 +1,7 @@
 import { auth } from '$lib/server/lucia';
 import { prisma } from '$lib/server/prisma';
 import { Prisma } from '@prisma/client';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { signupFormSchema } from './signup-form.svelte';
 
@@ -60,6 +60,6 @@ export const actions = {
 			});
 		}
 
-		return { form };
+		throw redirect(302, '/');
 	}
 };
