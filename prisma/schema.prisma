@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgres"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -37,8 +36,6 @@ model Notification {
   title   String
   message String
   read    Boolean @default(false)
-
-  @@index([user_id])
 }
 
 model Permission {
@@ -67,8 +64,6 @@ model Album {
   parent_id String?
   parent    Album?  @relation("AlbumToAlbum", references: [id], fields: [parent_id], onUpdate: NoAction, onDelete: NoAction)
   children  Album[] @relation("AlbumToAlbum")
-
-  @@index([user_id, parent_id])
 }
 
 model AlbumPermission {
@@ -87,8 +82,6 @@ model AlbumPermission {
   may_download Boolean @default(false)
   require_link Boolean @default(false)
   password     String?
-
-  @@index([album_id, user_id])
 }
 
 model Photo {
@@ -102,14 +95,13 @@ model Photo {
 
   title         String
   description   String?
+  hash          String        @unique
   tags          Tag[]
   is_public     Boolean       @default(false)
   is_starred    Boolean       @default(false)
   size_variants SizeVariant[]
   mime          String
   exif          Json?
-
-  @@index([album_id, user_id])
 }
 
 model SizeVariant {
@@ -119,15 +111,14 @@ model SizeVariant {
   photo_id   String
   photo      Photo    @relation(references: [id], fields: [photo_id], onDelete: Cascade)
 
-  type       SizeVariantType
-  short_path String
-  full_path  String
-  url        String
-  width      Int
-  height     Int
-  file_size  Int
+  type      SizeVariantType
+  path      String
+  url       String
+  width     Int
+  height    Int
+  file_size Int
 
-  @@index([photo_id])
+  @@unique([photo_id, type])
 }
 
 enum SizeVariantType {
@@ -149,8 +140,6 @@ model Tag {
 
   name   String
   photos Photo[]
-
-  @@index([user_id])
 }
 
 model Session {

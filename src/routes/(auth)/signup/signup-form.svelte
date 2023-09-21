@@ -4,7 +4,11 @@
 		username: z
 			.string()
 			.min(2, 'Username must be at least 2 characters.')
-			.max(30, 'Username must not be longer than 30 characters'),
+			.max(30, 'Username must not be longer than 30 characters.')
+			.regex(
+				/^[a-zA-Z0-9_-]*$/,
+				'Username can only contain alphanumeric characters, underscores, and dashes.'
+			),
 		password: z.string().min(8, 'Password must be at least 8 characters.')
 	});
 	export type SignupFormSchema = typeof signupFormSchema;
