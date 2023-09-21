@@ -16,7 +16,7 @@
 			<Search class="w-6 h-6" />
 		</Button>
 
-		<DropdownMenu.Root bind:open={isOpen}>
+		<DropdownMenu.Root bind:open={isOpen} preventScroll={false}>
 			<DropdownMenu.Trigger asChild let:builder>
 				<Button
 					builders={[builder]}

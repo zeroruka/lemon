@@ -7,7 +7,7 @@
 </script>
 
 <div class="rounded-full border border-muted backdrop-blur-md bg-card/70 overflow-hidden relative">
-	<DropdownMenu.Root positioning={{ placement: 'bottom-end' }}>
+	<DropdownMenu.Root positioning={{ placement: 'bottom-end' }} preventScroll={false}>
 		<DropdownMenu.Trigger asChild let:builder>
 			<Button
 				variant="ghost"

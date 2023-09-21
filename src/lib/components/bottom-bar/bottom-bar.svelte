@@ -5,7 +5,7 @@
 	import UserNav from './user-nav.svelte';
 </script>
 
-<div class="absolute left-4 right-4 bottom-4 flex justify-between">
+<div class="fixed bottom-0 w-full flex justify-between p-4">
 	<ServerStatus />
 
 	<div class="flex space-x-2">

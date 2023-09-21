@@ -7,6 +7,19 @@ import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import sharp from 'sharp';
 
+export async function load({ locals }) {
+	const photos = await prisma.photo.findMany({
+		where: {
+			user_id: locals.user.id
+		},
+		include: {
+			size_variants: true
+		}
+	});
+
+	return { photos };
+}
+
 export const actions = {
 	uploadFiles: async ({ request, locals }) => {
 		const form = await request.formData();

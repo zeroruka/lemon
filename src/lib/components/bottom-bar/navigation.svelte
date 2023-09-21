@@ -56,7 +56,7 @@
 <div class="rounded-full border border-muted backdrop-blur-md bg-card/70 relative">
 	<div
 		bind:this={hoverCircle}
-		class="absolute rounded-full bg-secondary pointer-events-none opacity-0 z-40"
+		class="absolute rounded-full bg-secondary/80 pointer-events-none opacity-0 z-40"
 	/>
 	<div class="flex -space-x-2">
 		{#each paths as path}

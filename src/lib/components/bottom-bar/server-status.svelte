@@ -10,7 +10,7 @@
 			<Button
 				builders={[builder]}
 				variant="ghost"
-				class="text-sm font-medium transition-colors hover:text-primary text-muted-foreground p-4 h-full hover:bg-inherit"
+				class="text-sm font-medium transition-colors hover:text-primary text-muted-foreground p-4 h-full hover:bg-inherit "
 			>
 				<Citrus class="w-6 h-6" />
 			</Button>
